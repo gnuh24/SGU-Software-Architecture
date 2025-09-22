@@ -11,6 +11,7 @@ public class UserManagerApp {
 		userAuthenticator.authenticateUser(validUser); // Should authenticate successfully
 
 
+		// Invalid user data
 		User invalidUser1 = new User("abc", "Password123");
 		userRegistration.registerUser(invalidUser1); // Invalid username (too short)
 		userAuthenticator.authenticateUser(invalidUser1); // Invalid username (too short)
