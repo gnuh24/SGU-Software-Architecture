@@ -6,4 +6,8 @@ public class UserValidator {
 	public static boolean validatePassword(String password) {
 		return password.length() >= 8 && password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$");
 	}
+
+	public boolean validateUser(User user) {
+		return validateUsername(user.getUsername()) && validatePassword(user.getPassword());
+	}
 }
