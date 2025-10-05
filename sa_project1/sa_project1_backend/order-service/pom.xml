@@ -1,0 +1,111 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+        <modelVersion>4.0.0</modelVersion>
+
+        <groupId>sgu.sa.order</groupId>
+        <artifactId>order-service</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <packaging>pom</packaging>
+
+        <name>Order Service Parent</name>
+        <description>Parent module for Order Service (DDD + Clean Architecture)</description>
+
+        <!-- Inherit Spring Boot dependency management -->
+        <parent>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>3.2.5</version>
+                <relativePath/>
+        </parent>
+
+        <!-- ======== Submodules ======== -->
+        <modules>
+                <module>order-domain</module>
+                <module>order-dataaccess</module>
+                <module>order-messaging</module>
+                <module>order-container</module>
+        </modules>
+
+        <!-- ======== Common Properties ======== -->
+        <properties>
+                <java.version>17</java.version>
+                <modelmapper.version>3.1.1</modelmapper.version>
+                <springdoc.version>2.2.0</springdoc.version>
+        </properties>
+
+        <!-- ======== Dependency Management ======== -->
+        <dependencyManagement>
+                <dependencies>
+                        <dependency>
+                                <groupId>sgu.sa.order</groupId>
+                                <artifactId>order-domain-core</artifactId>
+                                <version>${project.version}</version>
+                        </dependency>
+
+                        <dependency>
+                                <groupId>sgu.sa.order</groupId>
+                                <artifactId>order-application-service</artifactId>
+                                <version>${project.version}</version>
+                        </dependency>
+
+                        <dependency>
+                                <groupId>sgu.sa.order</groupId>
+                                <artifactId>order-dataaccess</artifactId>
+                                <version>${project.version}</version>
+                        </dependency>
+
+                        <dependency>
+                                <groupId>sgu.sa.order</groupId>
+                                <artifactId>order-messaging</artifactId>
+                                <version>${project.version}</version>
+                        </dependency>
+
+                        <dependency>
+                                <groupId>sgu.sa.order</groupId>
+                                <artifactId>order-container</artifactId>
+                                <version>${project.version}</version>
+                        </dependency>
+
+                        <!-- Spring Boot BOM -->
+                        <dependency>
+                                <groupId>org.springframework.boot</groupId>
+                                <artifactId>spring-boot-dependencies</artifactId>
+                                <version>3.2.5</version>
+                                <type>pom</type>
+                                <scope>import</scope>
+                        </dependency>
+                </dependencies>
+        </dependencyManagement>
+
+
+        <!-- ======== Build Plugins ======== -->
+        <build>
+                <plugins>
+                        <!-- Enforce Clean Architecture: domain không được dùng Spring -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-enforcer-plugin</artifactId>
+                                <executions>
+                                        <execution>
+                                                <id>enforce-banned-dependencies</id>
+                                                <goals>
+                                                        <goal>enforce</goal>
+                                                </goals>
+                                                <configuration>
+                                                        <rules>
+                                                                <bannedDependencies>
+                                                                        <excludes>
+                                                                                <exclude>*:spring-*</exclude>
+                                                                        </excludes>
+                                                                </bannedDependencies>
+                                                        </rules>
+                                                </configuration>
+                                        </execution>
+                                </executions>
+                        </plugin>
+                </plugins>
+        </build>
+
+</project>
