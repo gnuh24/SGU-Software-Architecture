@@ -20,4 +20,32 @@
                 <module>order-application-service</module>
         </modules>
 
+        <!-- ======== Build Plugins ======== -->
+        <build>
+                <plugins>
+                        <!-- Enforce Clean Architecture: domain không được dùng Spring -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-enforcer-plugin</artifactId>
+                                <executions>
+                                        <execution>
+                                                <id>enforce-banned-dependencies</id>
+                                                <goals>
+                                                        <goal>enforce</goal>
+                                                </goals>
+                                                <configuration>
+                                                        <rules>
+                                                                <bannedDependencies>
+                                                                        <excludes>
+                                                                                <exclude>*:spring-*</exclude>
+                                                                        </excludes>
+                                                                </bannedDependencies>
+                                                        </rules>
+                                                </configuration>
+                                        </execution>
+                                </executions>
+                        </plugin>
+                </plugins>
+        </build>
+
 </project>
