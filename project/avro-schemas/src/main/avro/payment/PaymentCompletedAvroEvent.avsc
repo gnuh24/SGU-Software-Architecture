@@ -1,0 +1,10 @@
+{
+  "namespace": "event.payment",
+  "type": "record",
+  "name": "PaymentCompletedAvroEvent",
+  "fields": [
+    { "name": "paymentId", "type": "string" },
+    { "name": "orderId", "type": "string" },
+    { "name": "occurredOn", "type": { "type": "long", "logicalType": "timestamp-millis" } }
+  ]
+}
