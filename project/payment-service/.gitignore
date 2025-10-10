@@ -1,0 +1,36 @@
+# === Maven / Gradle ===
+target/
+build/
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# === IntelliJ IDEA ===
+.idea/
+*.iml
+*.iws
+
+# === Eclipse ===
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# === NetBeans ===
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# === VS Code ===
+.vscode/
+
+# === OS ===
+.DS_Store
+
+# === Logs / temporary files ===
+*.log
+*.tmp
