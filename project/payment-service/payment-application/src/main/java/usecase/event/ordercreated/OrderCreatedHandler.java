@@ -1,11 +1,12 @@
 package usecase.event.ordercreated;
 
+import lombok.RequiredArgsConstructor;
 import usecase.event.common.AppEventHandler;
 import lombok.AllArgsConstructor;
 import usecase.command.createpayment.CreatePaymentCommand;
 import usecase.command.createpayment.CreatePaymentHandler;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderCreatedHandler implements AppEventHandler<OrderCreatedEvent> {
 
     private CreatePaymentHandler createPaymentHandler;

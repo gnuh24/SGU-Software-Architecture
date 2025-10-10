@@ -4,7 +4,7 @@ import event.*;
 import event.payment.*;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+//@Mapper
 public interface PaymentMapper {
     PaymentCompletedAvroEvent toAvro(PaymentCompleted event);
     PaymentCanceledAvroEvent toAvro(PaymentCanceled event);

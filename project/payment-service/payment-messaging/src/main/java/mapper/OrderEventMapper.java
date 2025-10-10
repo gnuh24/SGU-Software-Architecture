@@ -4,7 +4,7 @@ import event.order.OrderCreatedAvroEvent;
 import org.mapstruct.Mapper;
 import usecase.event.ordercreated.OrderCreatedEvent;
 
-@Mapper(componentModel = "spring")
+//@Mapper
 public interface OrderEventMapper {
     OrderCreatedEvent toAppEvent(OrderCreatedAvroEvent avro);
 }

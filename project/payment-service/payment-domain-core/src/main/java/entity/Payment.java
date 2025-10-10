@@ -6,6 +6,7 @@ import event.*;
 import exception.InvalidStatusException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import type.PaymentMethod;
 import type.PaymentStatus;
@@ -19,15 +20,16 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class Payment implements HasDomainEvent {
-    private final UUID paymentId;
-    private final UUID orderId;
-    private final Money amount;
-    private final PaymentMethod method;
+    private UUID paymentId;
+    private UUID orderId;
+    private Money amount;
+    private PaymentMethod method;
     private PaymentStatus status;
-    private final List<PaymentStatusEntry> statusHistory = new ArrayList<>();
-    private final Instant createdAt;
+    private List<PaymentStatusEntry> statusHistory = new ArrayList<>();
+    private Instant createdAt;
 
     public Payment(UUID orderId, Money amount, PaymentMethod method) {
         this.paymentId = UUID.randomUUID();

@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ktpm_db
+    username: root
+    password: 123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: payment_schema
+        jdbc:
+          time_zone: Asia/Ho_Chi_Minh
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  # -------------------------
+  # Kafka + Avro
+  # -------------------------
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: payment-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        schema.registry.url: http://localhost:8081
+        specific.avro.reader: true
+
+# Optional: Logging
+logging:
+  level:
+    root: INFO
+    org.springframework.kafka: INFO
+    com.example.paymentservice: DEBUG

@@ -1,10 +1,7 @@
 package persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import persistence.vo.PaymentStatusEntryEmbeddable;
 import type.Currency;
 import type.PaymentMethod;
@@ -16,12 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Table(name = "payments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "payments", schema = "payment_schema")
 public class PaymentEntity {
 
     @Id
@@ -31,8 +29,8 @@ public class PaymentEntity {
     @Column(name = "order_id", nullable = false, columnDefinition = "uuid")
     private UUID orderId;
 
-    @Column(name = "amount", nullable = false, precision = 19, scale = 2)
-    private BigDecimal amount;
+    @Column(name = "value", nullable = false, precision = 18, scale = 2)
+    private BigDecimal value;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "currency", nullable = false, length = 3)
@@ -59,6 +57,7 @@ public class PaymentEntity {
     @ElementCollection
     @CollectionTable(
         name = "payment_status_history",
+        schema = "payment_schema",
         joinColumns = @JoinColumn(name = "payment_id")
     )
     private List<PaymentStatusEntryEmbeddable> statusHistory = new ArrayList<>();

@@ -1,15 +1,17 @@
 package repository.impl;
 
 import entity.Payment;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import mapper.PaymentMapper;
+import org.springframework.stereotype.Repository;
 import repository.PaymentRepository;
 import repository.jpa.PaymentJpaRepository;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Repository
 public class PaymentRepositoryImpl implements PaymentRepository {
 
     private final PaymentJpaRepository paymentJpaRepository;

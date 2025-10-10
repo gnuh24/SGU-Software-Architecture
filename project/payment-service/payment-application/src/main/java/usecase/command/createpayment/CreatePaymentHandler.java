@@ -4,11 +4,12 @@ import adapter.external.GatewayFactory;
 import adapter.messaging.EventPublisher;
 import entity.Payment;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import mapper.PaymentMapper;
 import repository.PaymentRepository;
 import vo.Money;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CreatePaymentHandler {
     private PaymentRepository paymentRepo;
     private PaymentMapper paymentMapper;

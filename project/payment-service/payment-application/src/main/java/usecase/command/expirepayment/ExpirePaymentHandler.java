@@ -3,10 +3,11 @@ package usecase.command.expirepayment;
 import adapter.messaging.EventPublisher;
 import exception.PaymentNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import repository.PaymentRepository;
 import type.PaymentStatus;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ExpirePaymentHandler {
     private final PaymentRepository paymentRepo;
     private final EventPublisher eventPublisher;
