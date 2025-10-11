@@ -9,13 +9,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public record OrderCreated(
+public record OrderPaid(
     UUID orderId,
-    UUID customerId,
-    BigDecimal totalPrice,
-    PaymentMethod method,
-    List<ItemData> items,
     Instant occurredOn
 ) implements DomainEvent {
 }
-
