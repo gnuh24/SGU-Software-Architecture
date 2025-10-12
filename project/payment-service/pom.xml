@@ -11,10 +11,10 @@
 
   <modules>
     <module>payment-domain-core</module>
-    <module>payment-messaging</module>
-    <module>payment-container</module>
     <module>payment-application</module>
     <module>payment-infrastructure</module>
+    <module>payment-messaging</module>
+    <module>payment-container</module>
   </modules>
 
   <properties>

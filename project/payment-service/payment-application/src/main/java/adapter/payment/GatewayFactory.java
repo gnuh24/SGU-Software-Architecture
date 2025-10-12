@@ -1,4 +1,4 @@
-package adapter.external;
+package adapter.payment;
 
 import type.PaymentMethod;
 

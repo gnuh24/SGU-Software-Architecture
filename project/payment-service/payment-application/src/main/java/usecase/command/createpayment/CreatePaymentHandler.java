@@ -1,9 +1,7 @@
 package usecase.command.createpayment;
 
-import adapter.external.GatewayFactory;
 import adapter.messaging.EventPublisher;
 import entity.Payment;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import mapper.PaymentMapper;
 import repository.PaymentRepository;
@@ -17,7 +15,7 @@ public class CreatePaymentHandler {
 
     public CreatePaymentResult handle(CreatePaymentCommand command) {
         var money = new Money(command.amount(), command.currency());
-        var payment = paymentRepo.save(new Payment(command.orderId(), money, command.method()));
+        var payment = paymentRepo.save(Payment.create(command.orderId(), money, command.method()));
 
         eventPublisher.publishAll(payment.getDomainEvents());
         payment.clearDomainEvents();

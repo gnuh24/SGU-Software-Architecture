@@ -16,6 +16,18 @@ spring:
           time_zone: Asia/Ho_Chi_Minh
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
+vnpay:
+  version: "2.1.0"
+  command: "pay"
+  tmn-code: "W3NRP17R"
+  hash-secret: "58E1ELSWK3B2US8U5T6FKBYZGI9603LD"
+  pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+  return-url: "https://google.com"
+  ipn-url: "https://google.com"
+  ip-addr: "127.0.0.1"
+  expire-minutes: 15
+  locale: "vn"
+
   # -------------------------
   # Kafka + Avro
   # -------------------------

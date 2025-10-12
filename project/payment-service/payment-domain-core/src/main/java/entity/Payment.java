@@ -1,6 +1,5 @@
 package entity;
 
-import common.DomainEvent;
 import common.HasDomainEvent;
 import event.*;
 import exception.InvalidStatusException;
@@ -31,33 +30,34 @@ public class Payment implements HasDomainEvent {
     private List<PaymentStatusEntry> statusHistory = new ArrayList<>();
     private Instant createdAt;
 
-    public Payment(UUID orderId, Money amount, PaymentMethod method) {
-        this.paymentId = UUID.randomUUID();
-        this.orderId = orderId;
-        this.amount = amount;
-        this.method = method;
-        this.status = PaymentStatus.PENDING;
-        this.createdAt = Instant.now();
-        this.statusHistory.add(new PaymentStatusEntry(PaymentStatus.PENDING, this.createdAt));
-
-        addDomainEvent(new PaymentCreated(paymentId, orderId, Instant.now()));
+    public static Payment create(UUID orderId, Money amount, PaymentMethod method) {
+        Payment payment = new Payment();
+        payment.setPaymentId(UUID.randomUUID());
+        payment.setOrderId(orderId);
+        payment.setAmount(amount);
+        payment.setMethod(method);
+        payment.setStatus(PaymentStatus.PENDING);
+        payment.setCreatedAt(Instant.now());
+        payment.getStatusHistory().add(new PaymentStatusEntry(PaymentStatus.PENDING, Instant.now()));
+        payment.addDomainEvent(new PaymentCreated(payment.getPaymentId(), orderId, Instant.now()));
+        return payment;
     }
 
     public void changeStatus(PaymentStatus newStatus) {
-        if (!PaymentStatusEntry.isValidTransition(this.status, newStatus)) {
-            var error = String.format("Không thể chuyển trạng thái từ %s sang %s", this.status, newStatus);
+        if (!PaymentStatusEntry.isValidTransition(getStatus(), newStatus)) {
+            var error = String.format("Không thể chuyển trạng thái từ %s sang %s", getStatus(), newStatus);
             throw new InvalidStatusException(error);
         }
-        this.status = newStatus;
+        this.setStatus(newStatus);
         Instant now = Instant.now();
-        this.statusHistory.add(new PaymentStatusEntry(newStatus, now));
+        this.getStatusHistory().add(new PaymentStatusEntry(newStatus, now));
 
         switch (newStatus) {
-            case COMPLETED -> addDomainEvent(new PaymentCompleted(paymentId, orderId, now));
-            case FAILED -> addDomainEvent(new PaymentFailed(paymentId, orderId, now));
-            case CANCELED -> addDomainEvent(new PaymentCanceled(paymentId, orderId, now));
-            case EXPIRED -> addDomainEvent(new PaymentExpired(paymentId, orderId, now));
-            case REFUNDED -> addDomainEvent(new PaymentRefunded(paymentId, orderId, now));
+            case COMPLETED -> addDomainEvent(new PaymentCompleted(getPaymentId(), getOrderId(), now));
+            case FAILED -> addDomainEvent(new PaymentFailed(getPaymentId(), getOrderId(), now));
+            case CANCELED -> addDomainEvent(new PaymentCanceled(getPaymentId(), getOrderId(), now));
+            case EXPIRED -> addDomainEvent(new PaymentExpired(getPaymentId(), getOrderId(), now));
+            case REFUNDED -> addDomainEvent(new PaymentRefunded(getPaymentId(), getOrderId(), now));
             default -> {
             }
         }

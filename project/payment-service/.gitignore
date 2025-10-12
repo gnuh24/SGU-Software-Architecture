@@ -34,3 +34,6 @@ build/
 # === Logs / temporary files ===
 *.log
 *.tmp
+
+# === Others
+**/application.yml
