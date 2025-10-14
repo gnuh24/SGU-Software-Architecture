@@ -14,7 +14,6 @@ spring:
         default_schema: payment_schema
         jdbc:
           time_zone: Asia/Ho_Chi_Minh
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 vnpay:
   version: "2.1.0"
