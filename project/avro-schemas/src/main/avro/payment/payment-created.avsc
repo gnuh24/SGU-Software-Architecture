@@ -3,8 +3,8 @@
   "type": "record",
   "name": "PaymentCreatedAvroEvent",
   "fields": [
-    { "name": "paymentId", "type": "string" },
-    { "name": "orderId", "type": "string" },
+    { "name": "paymentId", "type": { "type": "string", "logicalType": "uuid" } },
+    { "name": "orderId", "type": { "type": "string", "logicalType": "uuid" } },
     { "name": "occurredOn", "type": { "type": "long", "logicalType": "timestamp-millis" } }
   ]
 }

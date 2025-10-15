@@ -1,0 +1,52 @@
+{
+  "namespace": "event.avro.order",
+  "type": "record",
+  "name": "OrderCreatedAvroEvent",
+  "fields": [
+    { "name": "orderId", "type": { "type": "string", "logicalType": "uuid" } },
+    { "name": "customerId", "type": { "type": "string", "logicalType": "uuid" } },
+    {
+      "name": "totalPrice",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 18,
+        "scale": 2
+      }
+    },
+    {
+      "name": "method",
+      "type": {
+        "type": "enum",
+        "name": "PaymentMethod",
+        "symbols": ["CASH", "ZALO_PAY", "VN_PAY"]
+      }
+    },
+    {
+      "name": "items",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "ItemData",
+          "type": "record",
+          "fields": [
+            { "name": "productId", "type": { "type": "string", "logicalType": "uuid" } },
+            {
+              "name": "price",
+              "type": {
+                "type": "bytes",
+                "logicalType": "decimal",
+                "precision": 18,
+                "scale": 2
+              }
+            },
+            { "name": "quantity", "type": "int" }
+          ]
+        }
+      }
+    },
+    { "name": "occurredOn",
+      "type": { "type": "long", "logicalType": "timestamp-millis" }
+    }
+  ]
+}
