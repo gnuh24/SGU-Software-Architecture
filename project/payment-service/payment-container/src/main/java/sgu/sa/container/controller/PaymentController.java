@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sgu.sa.application.usecase.command.cancelpayment.CancelPaymentCommand;
 import sgu.sa.application.usecase.command.cancelpayment.CancelPaymentHandler;
+import sgu.sa.application.usecase.command.completepayment.CompletePaymentCommand;
+import sgu.sa.application.usecase.command.completepayment.CompletePaymentHandler;
 import sgu.sa.application.usecase.command.createpayment.CreatePaymentCommand;
 import sgu.sa.application.usecase.command.createpayment.CreatePaymentHandler;
 import sgu.sa.application.usecase.command.createpayment.CreatePaymentResult;
@@ -31,6 +33,7 @@ public class PaymentController {
     private final GetOrderPaymentHandler getOrderPaymentHandler;
     private final GetPaymentHandler getPaymentHandler;
     private final CancelPaymentHandler cancelPaymentHandler;
+    private final CompletePaymentHandler completePaymentHandler;
 
     @PostMapping("/vnpay/url")
     public ResponseEntity<DataResponse<CreatePaymentUrlResult>> createUrl(@RequestBody CreatePaymentUrlCommand command) {
@@ -62,11 +65,19 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{paymentId}/cancel")
+    @PatchMapping("/{paymentId}/cancel")
     public ResponseEntity<DataResponse<Void>> cancelPayment(@PathVariable UUID paymentId) {
         var command = new CancelPaymentCommand(paymentId);
         cancelPaymentHandler.handle(command);
         var response = DataResponse.successVoid("Hủy thanh toán thành công.");
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{paymentId}/complete")
+    public ResponseEntity<DataResponse<Void>> completePayment(@PathVariable UUID paymentId) {
+        var command = new CompletePaymentCommand(paymentId);
+        completePaymentHandler.handle(command);
+        var response = DataResponse.successVoid("Xác nhận thanh toán thành công.");
         return ResponseEntity.ok(response);
     }
 }

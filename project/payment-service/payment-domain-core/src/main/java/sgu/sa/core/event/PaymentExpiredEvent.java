@@ -5,10 +5,13 @@ import sgu.sa.core.common.DomainEvent;
 import java.time.Instant;
 import java.util.UUID;
 
-public record PaymentFailed(
+public record PaymentExpiredEvent(
     UUID paymentId,
     UUID orderId,
     Instant occurredOn
 ) implements DomainEvent {
-
+    @Override
+    public String topic() {
+        return "payment-expired";
+    }
 }

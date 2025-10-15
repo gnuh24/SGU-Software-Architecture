@@ -18,9 +18,9 @@ public class CancelPaymentHandler implements RequestHandler<CancelPaymentCommand
     @Override
     public Void handle(CancelPaymentCommand command) {
         var payment = paymentRepository
-            .findById(command.paymentId())
+            .findByOrderId(command.orderId())
             .orElseThrow(() -> new PaymentNotFoundException(
-                "Không tìm thấy thanh toán với Id " + command.paymentId()
+                "Không tìm thấy đơn hàng thanh toán với Id " + command.orderId()
             ));
         payment.changeStatus(PaymentStatus.CANCELED);
         paymentRepository.save(payment);

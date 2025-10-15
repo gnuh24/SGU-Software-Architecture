@@ -15,7 +15,7 @@ public class GetOrderPaymentHandler implements RequestHandler<GetOrderPaymentQue
     @Override
     public GetOrderPaymentResult handle(GetOrderPaymentQuery query) {
         var payment = paymentRepo
-            .findById(query.orderId())
+            .findByOrderId(query.orderId())
             .orElseThrow(() -> new PaymentNotFoundException(
                 "Không tìm thấy thanh toán của hóa đơn có Id " + query.orderId()
             ));

@@ -4,5 +4,5 @@ import sgu.sa.application.usecase.common.Request;
 
 import java.util.UUID;
 
-public record CancelPaymentCommand(UUID paymentId) implements Request<Void> {
+public record CancelPaymentCommand(UUID orderId) implements Request<Void> {
 }

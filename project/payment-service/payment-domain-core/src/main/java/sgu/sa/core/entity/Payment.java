@@ -39,7 +39,7 @@ public class Payment implements HasDomainEvent {
         payment.setStatus(PaymentStatus.PENDING);
         payment.setCreatedAt(Instant.now());
         payment.getStatusHistory().add(new PaymentStatusEntry(PaymentStatus.PENDING, Instant.now()));
-        payment.addDomainEvent(new PaymentCreated(payment.getPaymentId(), orderId, Instant.now()));
+        payment.addDomainEvent(new PaymentCreatedEvent(payment.getPaymentId(), orderId, Instant.now()));
         return payment;
     }
 
@@ -53,11 +53,11 @@ public class Payment implements HasDomainEvent {
         this.getStatusHistory().add(new PaymentStatusEntry(newStatus, now));
 
         switch (newStatus) {
-            case COMPLETED -> addDomainEvent(new PaymentCompleted(getPaymentId(), getOrderId(), now));
-            case FAILED -> addDomainEvent(new PaymentFailed(getPaymentId(), getOrderId(), now));
-            case CANCELED -> addDomainEvent(new PaymentCanceled(getPaymentId(), getOrderId(), now));
-            case EXPIRED -> addDomainEvent(new PaymentExpired(getPaymentId(), getOrderId(), now));
-            case REFUNDED -> addDomainEvent(new PaymentRefunded(getPaymentId(), getOrderId(), now));
+            case COMPLETED -> addDomainEvent(new PaymentCompletedEvent(getPaymentId(), getOrderId(), now));
+            case FAILED -> addDomainEvent(new PaymentFailedEvent(getPaymentId(), getOrderId(), now));
+            case CANCELED -> addDomainEvent(new PaymentCanceledEvent(getPaymentId(), getOrderId(), now));
+            case EXPIRED -> addDomainEvent(new PaymentExpiredEvent(getPaymentId(), getOrderId(), now));
+            case REFUNDED -> addDomainEvent(new PaymentRefundedEvent(getPaymentId(), getOrderId(), now));
             default -> {
             }
         }

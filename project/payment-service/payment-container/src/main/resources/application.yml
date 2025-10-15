@@ -1,3 +1,6 @@
+server:
+  port: 8082
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ktpm_db
@@ -14,6 +17,20 @@ spring:
         default_schema: payment_schema
         jdbc:
           time_zone: Asia/Ho_Chi_Minh
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: http://localhost:8089
+    consumer:
+      group-id: payment-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        schema.registry.url: http://localhost:8089
+        specific.avro.reader: true
 
 vnpay:
   version: "2.1.0"
@@ -27,23 +44,8 @@ vnpay:
   expire-minutes: 15
   locale: "vn"
 
-  # -------------------------
-  # Kafka + Avro
-  # -------------------------
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: payment-group
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
-      properties:
-        schema.registry.url: http://localhost:8081
-        specific.avro.reader: true
-
 # Optional: Logging
 logging:
   level:
     root: INFO
     org.springframework.kafka: INFO
-    com.example.paymentservice: DEBUG

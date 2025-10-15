@@ -28,7 +28,6 @@ public class CompletePaymentHandler implements RequestHandler<CompletePaymentCom
         paymentRepository.save(payment);
 
         eventPublisher.publishAll(payment.getDomainEvents());
-        payment.clearDomainEvents();
         return null;
     }
 }

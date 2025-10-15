@@ -1,20 +1,25 @@
 package sgu.sa.application.event.ordercreated;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import sgu.sa.application.event.common.AppEventHandler;
 import sgu.sa.application.usecase.command.createpayment.CreatePaymentCommand;
 import sgu.sa.application.usecase.command.createpayment.CreatePaymentHandler;
+import sgu.sa.core.type.Currency;
 
-public record OrderCreatedHandler(
-    CreatePaymentHandler createPaymentHandler
-) implements AppEventHandler<OrderCreatedEvent> {
+@Service
+@RequiredArgsConstructor
+public class OrderCreatedHandler implements AppEventHandler<OrderCreatedEvent> {
+    private final CreatePaymentHandler handler;
+
     @Override
     public void handle(OrderCreatedEvent event) {
         var command = new CreatePaymentCommand(
             event.orderId(),
             event.amount(),
-            event.currency(),
+            Currency.VND,
             event.method()
         );
-        createPaymentHandler.handle(command);
+        handler.handle(command);
     }
 }

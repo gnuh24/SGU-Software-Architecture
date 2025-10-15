@@ -8,4 +8,5 @@ public interface DomainEvent {
     default UUID id() {
         return UUID.randomUUID();
     }
+    String topic();
 }
