@@ -18,4 +18,14 @@ public class OrderItem {
     private UUID productId;
     private int quantity;
     private BigDecimal price;
+
+    public static OrderItem create(UUID orderId, UUID productId, int quantity, BigDecimal price) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setId(UUID.randomUUID());
+        orderItem.setOrderId(orderId);
+        orderItem.setProductId(productId);
+        orderItem.setQuantity(quantity);
+        orderItem.setPrice(price);
+        return orderItem;
+    }
 }

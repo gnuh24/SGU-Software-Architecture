@@ -3,11 +3,11 @@ package sgu.sa.container.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sgu.sa.application.usecase.command.cancelorder.CancelOrderCommand;
+import sgu.sa.application.usecase.command.cancelorder.CancelOrderHandler;
 import sgu.sa.application.usecase.command.createorder.CreateOrderCommand;
 import sgu.sa.application.usecase.command.createorder.CreateOrderHandler;
 import sgu.sa.application.usecase.command.createorder.CreateOrderResult;
-import sgu.sa.application.usecase.command.payorder.PayOrderCommand;
-import sgu.sa.application.usecase.command.payorder.PayOrderHandler;
 import sgu.sa.application.usecase.query.getorder.GetOrderHandler;
 import sgu.sa.application.usecase.query.getorder.GetOrderQuery;
 import sgu.sa.application.usecase.query.getorder.GetOrderResult;
@@ -25,7 +25,7 @@ public class OrderController {
     private final CreateOrderHandler createOrderHandler;
     private final GetOrderHandler getOrderHandler;
     private final GetUserOrdersHandler getUserOrdersHandler;
-    private final PayOrderHandler payOrderHandler;
+    private final CancelOrderHandler cancelOrderHandler;
 
     @GetMapping("/{orderId}")
     public ResponseEntity<DataResponse<GetOrderResult>> getOrder(@PathVariable UUID orderId) {
@@ -50,11 +50,11 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{orderId}/pay")
+    @PatchMapping("/{orderId}/cancel")
     public ResponseEntity<DataResponse<Void>> cancelPayment(@PathVariable UUID orderId) {
-        var command = new PayOrderCommand(orderId);
-        payOrderHandler.handle(command);
-        var response = DataResponse.successVoid("Đơn hàng đã thanh toán thành công.");
+        var command = new CancelOrderCommand(orderId);
+        cancelOrderHandler.handle(command);
+        var response = DataResponse.successVoid("Hủy đơn hàng thành công.");
         return ResponseEntity.ok(response);
     }
 

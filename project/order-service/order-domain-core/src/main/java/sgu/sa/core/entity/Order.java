@@ -1,9 +1,9 @@
 package sgu.sa.core.entity;
 
 import sgu.sa.core.common.HasDomainEvent;
-import sgu.sa.core.event.OrderCancel;
-import sgu.sa.core.event.OrderCreated;
-import sgu.sa.core.event.OrderPaid;
+import sgu.sa.core.event.OrderCanceledEvent;
+import sgu.sa.core.event.OrderCreatedEvent;
+import sgu.sa.core.event.OrderPaidEvent;
 import sgu.sa.core.vo.ItemData;
 import sgu.sa.core.exception.InvalidStatusException;
 import lombok.AllArgsConstructor;
@@ -40,7 +40,8 @@ public class Order implements HasDomainEvent {
         UUID customerId,
         UUID restaurantId,
         PaymentMethod method,
-        Address address
+        Address address,
+        List<ItemData> items
     )  {
         Order order = new Order();
         order.setOrderId(UUID.randomUUID());
@@ -51,17 +52,14 @@ public class Order implements HasDomainEvent {
         order.getStatusHistory().add(new OrderStatusEntry(OrderStatus.CREATED, Instant.now()));
         order.setAddress(address);
         order.setCreatedAt(Instant.now());
+        order.addItems(items);
 
-        var itemData = order.getItems().stream()
-            .map(item -> new ItemData(item.getProductId(), item.getQuantity(), item.getPrice()))
-            .toList();
-
-        order.addDomainEvent(new OrderCreated(
+        order.addDomainEvent(new OrderCreatedEvent(
             order.getOrderId(),
             order.getCustomerId(),
             order.getTotalPrice(),
             order.getMethod(),
-            itemData,
+            items,
             Instant.now()
         ));
         return order;
@@ -73,17 +71,21 @@ public class Order implements HasDomainEvent {
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public void addItems(List<OrderItem> items) {
+    public void addItems(List<ItemData> items) {
         if (this.items == null) {
             this.items = new ArrayList<>();
         }
-        this.items.addAll(items);
-
-        for (OrderItem item : items) {
-            item.setId(UUID.randomUUID());
-            item.setOrderId(this.getOrderId());
-        }
+        List<OrderItem> orderItems = items.stream()
+            .map(item -> OrderItem.create(
+                this.getOrderId(),
+                item.productId(),
+                item.quantity(),
+                item.price())
+            )
+            .toList();
+        this.items.addAll(orderItems);
     }
+
     public void changeStatus(OrderStatus newStatus) {
         if (!OrderStatusEntry.isValidTransition(getStatus(), newStatus)) {
             var error = String.format("Không thể chuyển trạng thái từ %s sang %s", getStatus(), newStatus);
@@ -94,8 +96,8 @@ public class Order implements HasDomainEvent {
         this.getStatusHistory().add(new OrderStatusEntry(newStatus, now));
 
         switch (newStatus) {
-            case PAID -> addDomainEvent(new OrderPaid(getOrderId(), now));
-            case CANCELED -> addDomainEvent(new OrderCancel(getOrderId(), now));
+            case PAID -> addDomainEvent(new OrderPaidEvent(getOrderId(), now));
+            case CANCELED -> addDomainEvent(new OrderCanceledEvent(getOrderId(), now));
             default -> {
             }
         }
