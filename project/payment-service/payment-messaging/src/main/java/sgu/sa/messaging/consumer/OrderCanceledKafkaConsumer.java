@@ -5,14 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import sgu.sa.application.event.ordercancel.OrderCanceledHandler;
-import sgu.sa.messaging.mapper.OrderEventMapper;
+import sgu.sa.application.usecase.command.cancelpayment.CancelPaymentCommand;
+import sgu.sa.application.usecase.command.cancelpayment.CancelPaymentHandler;
 
 @Component
 @RequiredArgsConstructor
 public class OrderCanceledKafkaConsumer {
-    private final OrderCanceledHandler handler;
-    private final OrderEventMapper mapper;
+
+    private final CancelPaymentHandler cancelPaymentHandler;
 
     @Transactional
     @KafkaListener(
@@ -21,6 +21,7 @@ public class OrderCanceledKafkaConsumer {
         containerFactory = "kafkaListenerContainerFactory"
     )
     public void consume(OrderCanceledAvroEvent avroEvent) {
-        handler.handle(mapper.toAppEvent(avroEvent));
+        var command = new CancelPaymentCommand(avroEvent.getOrderId());
+        cancelPaymentHandler.handle(command);
     }
 }

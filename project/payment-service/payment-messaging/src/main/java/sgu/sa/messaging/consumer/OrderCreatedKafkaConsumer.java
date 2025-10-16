@@ -5,14 +5,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import sgu.sa.application.event.ordercreated.OrderCreatedHandler;
-import sgu.sa.messaging.mapper.OrderEventMapper;
+import sgu.sa.application.usecase.command.createpayment.CreatePaymentCommand;
+import sgu.sa.application.usecase.command.createpayment.CreatePaymentHandler;
+import sgu.sa.core.type.Currency;
+import sgu.sa.core.type.PaymentMethod;
 
 @Component
 @RequiredArgsConstructor
 public class OrderCreatedKafkaConsumer {
-    private final OrderCreatedHandler handler;
-    private final OrderEventMapper mapper;
+
+    private final CreatePaymentHandler createPaymentHandler;
 
     @Transactional
     @KafkaListener(
@@ -21,6 +23,12 @@ public class OrderCreatedKafkaConsumer {
         containerFactory = "kafkaListenerContainerFactory"
     )
     public void consume(OrderCreatedAvroEvent avroEvent) {
-        handler.handle(mapper.toAppEvent(avroEvent));
+        var command = new CreatePaymentCommand(
+            avroEvent.getOrderId(),
+            avroEvent.getTotalPrice(),
+            Currency.VND,
+            PaymentMethod.valueOf(avroEvent.getMethod().toString())
+        );
+        createPaymentHandler.handle(command);
     }
 }
