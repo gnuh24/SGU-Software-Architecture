@@ -1,9 +1,10 @@
 package sgu.sa.container.payment.gateway;
 
-import sgu.sa.application.port.payment.Gateway;
 import org.springframework.stereotype.Component;
+import sgu.sa.application.port.payment.Gateway;
 import sgu.sa.container.payment.config.VnPayProperties;
 import sgu.sa.core.type.Currency;
+import sgu.sa.core.type.PaymentStatus;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 @Component
 public record VnPayGateway(
@@ -29,7 +31,7 @@ public record VnPayGateway(
         vnp_Params.put("vnp_Command", props().getCommand());
         vnp_Params.put("vnp_TmnCode", props().getTmnCode());
         vnp_Params.put("vnp_Amount", String.valueOf(amountVal));
-        vnp_Params.put("vnp_CurrCode", currency.name());
+        vnp_Params.put("vnp_CurrCode", currency.toString());
 
         String vnp_TxnRef = orderId.toString();
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
@@ -101,6 +103,37 @@ public record VnPayGateway(
 
         String myHash = hmacSHA512(props().getHashSecret(), hashData.toString());
         return myHash.equalsIgnoreCase(secureHash);
+    }
+
+    @Override
+    public void handleCallback(
+        Map<String, String> callbackParams,
+        BiConsumer<UUID, PaymentStatus> onComplete
+    ) {
+        if (!verifyPaymentCallback(callbackParams)) {
+            throw new RuntimeException("Payment callback verification failed");
+        }
+        String orderIdStr = callbackParams.get("vnp_TxnRef");
+        String responseCode = callbackParams.get("vnp_ResponseCode");
+
+        if (orderIdStr == null || responseCode == null) {
+            throw new IllegalArgumentException("Missing required callback parameters (vnp_TxnRef or vnp_ResponseCode)");
+        }
+
+        try {
+            UUID orderId = UUID.fromString(orderIdStr);
+            PaymentStatus status = switch (responseCode) {
+                case "00" -> PaymentStatus.COMPLETED;
+                case "24" -> PaymentStatus.CANCELED;
+                case "11" -> PaymentStatus.EXPIRED;
+                default -> PaymentStatus.FAILED;
+            };
+            onComplete.accept(orderId, status);
+
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid Order ID format in callback", e);
+        }
+
     }
 
     private String hmacSHA512(String key, String data) {

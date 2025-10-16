@@ -3,7 +3,7 @@ package sgu.sa.messaging.producer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-import sgu.sa.application.port.messaging.EventPublisher;
+import sgu.sa.application.port.messaging.EventProducer;
 import sgu.sa.core.common.DomainEvent;
 import sgu.sa.core.event.*;
 import sgu.sa.messaging.mapper.PaymentEventMapper;
@@ -12,12 +12,12 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaProducer implements EventPublisher {
+public class KafkaProducer implements EventProducer {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final PaymentEventMapper mapper;
 
     @Override
-    public void publish(DomainEvent event) {
+    public void produce(DomainEvent event) {
         Object message = switch (event) {
             case PaymentCreatedEvent e -> mapper.toAvro(e);
             case PaymentCompletedEvent e -> mapper.toAvro(e);
@@ -31,7 +31,7 @@ public class KafkaProducer implements EventPublisher {
     }
 
     @Override
-    public void publishAll(List<DomainEvent> events) {
-        events.forEach(this::publish);
+    public void produceAll(List<DomainEvent> events) {
+        events.forEach(this::produce);
     }
 }

@@ -3,7 +3,7 @@ package sgu.sa.application.usecase.command.refundpayment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sgu.sa.application.exception.PaymentNotFoundException;
-import sgu.sa.application.port.messaging.EventPublisher;
+import sgu.sa.application.port.messaging.EventProducer;
 import sgu.sa.application.usecase.common.RequestHandler;
 import sgu.sa.core.repository.PaymentRepository;
 import sgu.sa.core.type.PaymentStatus;
@@ -13,7 +13,7 @@ import sgu.sa.core.type.PaymentStatus;
 public class RefundPaymentHandler
  implements RequestHandler<RefundPaymentCommand, Void> {
     private final PaymentRepository paymentRepository;
-    private final EventPublisher eventPublisher;
+    private final EventProducer eventPublisher;
 
     @Override
     public Void handle(RefundPaymentCommand command) {
@@ -26,7 +26,7 @@ public class RefundPaymentHandler
         payment.changeStatus(PaymentStatus.REFUNDED);
         paymentRepository.save(payment);
 
-        eventPublisher.publishAll(payment.getDomainEvents());
+        eventPublisher.produceAll(payment.getDomainEvents());
         payment.clearDomainEvents();
         return null;
     }

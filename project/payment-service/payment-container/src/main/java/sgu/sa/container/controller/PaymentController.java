@@ -13,6 +13,8 @@ import sgu.sa.application.usecase.command.createpayment.CreatePaymentResult;
 import sgu.sa.application.usecase.command.createpaymenturl.CreatePaymentUrlCommand;
 import sgu.sa.application.usecase.command.createpaymenturl.CreatePaymentUrlHandler;
 import sgu.sa.application.usecase.command.createpaymenturl.CreatePaymentUrlResult;
+import sgu.sa.application.usecase.command.verifypayment.VerifyPaymentCommand;
+import sgu.sa.application.usecase.command.verifypayment.VerifyPaymentHandler;
 import sgu.sa.application.usecase.query.getorderpayment.GetOrderPaymentHandler;
 import sgu.sa.application.usecase.query.getorderpayment.GetOrderPaymentQuery;
 import sgu.sa.application.usecase.query.getorderpayment.GetOrderPaymentResult;
@@ -20,7 +22,9 @@ import sgu.sa.application.usecase.query.getpayment.GetPaymentHandler;
 import sgu.sa.application.usecase.query.getpayment.GetPaymentQuery;
 import sgu.sa.application.usecase.query.getpayment.GetPaymentResult;
 import sgu.sa.container.response.DataResponse;
+import sgu.sa.core.type.PaymentMethod;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -34,12 +38,25 @@ public class PaymentController {
     private final GetPaymentHandler getPaymentHandler;
     private final CancelPaymentHandler cancelPaymentHandler;
     private final CompletePaymentHandler completePaymentHandler;
+    private final VerifyPaymentHandler verifyPaymentHandler;
 
     @PostMapping("/vnpay/url")
     public ResponseEntity<DataResponse<CreatePaymentUrlResult>> createUrl(@RequestBody CreatePaymentUrlCommand command) {
-        var result = createPaymentUrlHandler.handle(command);
+        var vnpayCommand = new CreatePaymentUrlCommand(
+            command.amount(),
+            command.orderId(),
+            PaymentMethod.VN_PAY
+        );
+        var result = createPaymentUrlHandler.handle(vnpayCommand);
         var response = DataResponse.success("Tạo link thanh toán thành công!", result);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/vnpay/callback")
+    public ResponseEntity<String> handleVnPayCallback(@RequestParam Map<String, String> callbackParams) {
+        VerifyPaymentCommand command = new VerifyPaymentCommand(callbackParams, PaymentMethod.VN_PAY);
+        verifyPaymentHandler.handle(command);
+        return ResponseEntity.ok("OK");
     }
 
     @GetMapping("/{paymentId}")
@@ -80,4 +97,6 @@ public class PaymentController {
         var response = DataResponse.successVoid("Xác nhận thanh toán thành công.");
         return ResponseEntity.ok(response);
     }
+
+
 }

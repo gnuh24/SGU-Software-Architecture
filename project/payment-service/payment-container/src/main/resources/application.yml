@@ -39,8 +39,8 @@ vnpay:
   hash-secret: "58E1ELSWK3B2US8U5T6FKBYZGI9603LD"
   pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
   return-url: "https://google.com"
-  ipn-url: "https://google.com"
-  ip-addr: "127.0.0.1"
+  ipn-url: "https://corporeal-orlando-incongruously.ngrok-free.dev/api/payments/vnpay/callback"
+  ip-addr: "118.70.17.89"
   expire-minutes: 15
   locale: "vn"
 
