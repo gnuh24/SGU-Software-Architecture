@@ -1,0 +1,2 @@
+CREATE SCHEMA IF NOT EXISTS payment_schema;
+CREATE SCHEMA IF NOT EXISTS order_schema;
