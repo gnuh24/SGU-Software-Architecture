@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sgu.sa.application.mapper.PaymentDtoMapper;
 import sgu.sa.application.port.messaging.EventProducer;
-import sgu.sa.application.usecase.common.RequestHandler;
+import sgu.sa.application.mediator.RequestHandler;
 import sgu.sa.core.entity.Payment;
 import sgu.sa.core.repository.PaymentRepository;
 import sgu.sa.core.vo.Money;

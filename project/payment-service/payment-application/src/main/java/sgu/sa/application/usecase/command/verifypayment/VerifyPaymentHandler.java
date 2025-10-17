@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import sgu.sa.application.exception.PaymentNotFoundException;
 import sgu.sa.application.port.messaging.EventProducer;
 import sgu.sa.application.port.payment.GatewayFactory;
-import sgu.sa.application.usecase.common.RequestHandler;
+import sgu.sa.application.mediator.RequestHandler;
 import sgu.sa.core.repository.PaymentRepository;
 
 @Component

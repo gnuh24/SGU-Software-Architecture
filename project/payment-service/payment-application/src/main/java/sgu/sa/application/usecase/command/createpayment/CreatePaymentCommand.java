@@ -2,7 +2,7 @@ package sgu.sa.application.usecase.command.createpayment;
 
 import sgu.sa.core.type.Currency;
 import sgu.sa.core.type.PaymentMethod;
-import sgu.sa.application.usecase.common.Request;
+import sgu.sa.application.mediator.Request;
 
 import java.math.BigDecimal;
 import java.util.UUID;

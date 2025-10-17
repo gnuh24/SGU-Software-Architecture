@@ -1,5 +1,6 @@
-package sgu.sa.application.usecase.common;
+package sgu.sa.application.mediator;
 
+@HandlerComponent
 public interface RequestHandler<I extends Request<O>, O> {
     O handle(I in);
 }

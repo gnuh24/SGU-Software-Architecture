@@ -1,7 +1,7 @@
 package sgu.sa.application.usecase.command.createpaymenturl;
 
 import sgu.sa.core.type.PaymentMethod;
-import sgu.sa.application.usecase.common.Request;
+import sgu.sa.application.mediator.Request;
 
 import java.math.BigDecimal;
 import java.util.UUID;

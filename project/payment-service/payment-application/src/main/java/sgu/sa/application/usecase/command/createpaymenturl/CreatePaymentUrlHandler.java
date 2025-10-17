@@ -1,12 +1,12 @@
 package sgu.sa.application.usecase.command.createpaymenturl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import sgu.sa.application.mediator.HandlerComponent;
+import sgu.sa.application.mediator.RequestHandler;
 import sgu.sa.application.port.payment.GatewayFactory;
-import sgu.sa.application.usecase.common.RequestHandler;
 import sgu.sa.core.type.Currency;
 
-@Service
+@HandlerComponent
 @RequiredArgsConstructor
 public class CreatePaymentUrlHandler implements RequestHandler<CreatePaymentUrlCommand, CreatePaymentUrlResult> {
     private final GatewayFactory factory;

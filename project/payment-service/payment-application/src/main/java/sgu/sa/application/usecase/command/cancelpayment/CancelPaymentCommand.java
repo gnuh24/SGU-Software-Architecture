@@ -1,6 +1,6 @@
 package sgu.sa.application.usecase.command.cancelpayment;
 
-import sgu.sa.application.usecase.common.Request;
+import sgu.sa.application.mediator.Request;
 
 import java.util.UUID;
 

@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sgu.sa.application.exception.PaymentNotFoundException;
 import sgu.sa.application.mapper.PaymentDtoMapper;
-import sgu.sa.application.usecase.common.RequestHandler;
+import sgu.sa.application.mediator.RequestHandler;
 import sgu.sa.core.repository.PaymentRepository;
+
 @Service
 @RequiredArgsConstructor
 public class GetPaymentHandler implements RequestHandler<GetPaymentQuery, GetPaymentResult> {
