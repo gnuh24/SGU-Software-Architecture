@@ -1,14 +1,14 @@
 package sgu.sa.application.usecase.command.verifypayment;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import sgu.sa.application.exception.PaymentNotFoundException;
+import sgu.sa.application.mediator.HandlerComponent;
+import sgu.sa.application.mediator.RequestHandler;
 import sgu.sa.application.port.messaging.EventProducer;
 import sgu.sa.application.port.payment.GatewayFactory;
-import sgu.sa.application.mediator.RequestHandler;
 import sgu.sa.core.repository.PaymentRepository;
 
-@Component
+@HandlerComponent
 @RequiredArgsConstructor
 public class VerifyPaymentHandler implements RequestHandler<VerifyPaymentCommand, Void> {
     private final GatewayFactory gatewayFactory;

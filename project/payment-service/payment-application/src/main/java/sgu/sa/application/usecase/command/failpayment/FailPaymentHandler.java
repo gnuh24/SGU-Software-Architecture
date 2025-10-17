@@ -1,14 +1,14 @@
 package sgu.sa.application.usecase.command.failpayment;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import sgu.sa.application.exception.PaymentNotFoundException;
-import sgu.sa.application.port.messaging.EventProducer;
+import sgu.sa.application.mediator.HandlerComponent;
 import sgu.sa.application.mediator.RequestHandler;
+import sgu.sa.application.port.messaging.EventProducer;
 import sgu.sa.core.repository.PaymentRepository;
 import sgu.sa.core.type.PaymentStatus;
 
-@Service
+@HandlerComponent
 @RequiredArgsConstructor
 public class FailPaymentHandler implements RequestHandler<FailPaymentCommand, Void> {
     private final PaymentRepository paymentRepository;

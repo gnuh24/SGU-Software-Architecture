@@ -1,13 +1,13 @@
 package sgu.sa.application.usecase.query.getpayment;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import sgu.sa.application.exception.PaymentNotFoundException;
 import sgu.sa.application.mapper.PaymentDtoMapper;
+import sgu.sa.application.mediator.HandlerComponent;
 import sgu.sa.application.mediator.RequestHandler;
 import sgu.sa.core.repository.PaymentRepository;
 
-@Service
+@HandlerComponent
 @RequiredArgsConstructor
 public class GetPaymentHandler implements RequestHandler<GetPaymentQuery, GetPaymentResult> {
     private final PaymentRepository paymentRepo;
