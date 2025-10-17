@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-PaymentServiceApplication<payment-container>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "sgu.sa.container.PaymentServiceApplication",
+      "projectName": "payment-container",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-OrderServiceApplication<order-container>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "sgu.sa.container.OrderServiceApplication",
+      "projectName": "order-container",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

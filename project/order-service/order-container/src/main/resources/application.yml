@@ -2,6 +2,9 @@ server:
   port: 8081
 
 spring:
+  output:
+    ansi:
+      enabled: ALWAYS
   datasource:
     url: jdbc:postgresql://localhost:5432/ktpm_db
     username: root
@@ -31,7 +34,6 @@ spring:
       properties:
         schema.registry.url: http://localhost:8089
         specific.avro.reader: true
-
 
 # Optional: Logging
 logging:

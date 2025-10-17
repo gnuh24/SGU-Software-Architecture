@@ -11,6 +11,9 @@ import sgu.sa.application.usecase.command.createorder.CreateOrderResult;
 import sgu.sa.application.usecase.query.getorder.GetOrderHandler;
 import sgu.sa.application.usecase.query.getorder.GetOrderQuery;
 import sgu.sa.application.usecase.query.getorder.GetOrderResult;
+import sgu.sa.application.usecase.query.getstatistics.GetOrderStatisticsHandler;
+import sgu.sa.application.usecase.query.getstatistics.GetOrderStatisticsQuery;
+import sgu.sa.application.usecase.query.getstatistics.GetOrderStatisticsResult;
 import sgu.sa.application.usecase.query.getuserorders.GetUserOrdersHandler;
 import sgu.sa.application.usecase.query.getuserorders.GetUserOrdersQuery;
 import sgu.sa.application.usecase.query.getuserorders.GetUserOrdersResult;
@@ -26,12 +29,21 @@ public class OrderController {
     private final GetOrderHandler getOrderHandler;
     private final GetUserOrdersHandler getUserOrdersHandler;
     private final CancelOrderHandler cancelOrderHandler;
+    private final GetOrderStatisticsHandler getOrderStatisticsHandler;
 
     @GetMapping("/{orderId}")
     public ResponseEntity<DataResponse<GetOrderResult>> getOrder(@PathVariable UUID orderId) {
         var query = new GetOrderQuery(orderId);
         var result = getOrderHandler.handle(query);
         var response = DataResponse.success("Lấy thông tin đơn hàng thành công.", result);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<DataResponse<GetOrderStatisticsResult>> getOrderStatistics() {
+        var query = new GetOrderStatisticsQuery();
+        var result = getOrderStatisticsHandler.handle(query);
+        var response = DataResponse.success("Lấy thống kê đơn hàng thành công.", result);
         return ResponseEntity.ok(response);
     }
 
@@ -44,7 +56,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<DataResponse<CreateOrderResult>> createOrder(@RequestBody CreateOrderCommand createOrderCommand) {
+    public ResponseEntity<DataResponse<CreateOrderResult>> createOrder(
+            @RequestBody CreateOrderCommand createOrderCommand) {
         var result = createOrderHandler.handle(createOrderCommand);
         var response = DataResponse.success("Tạo đơn hàng thành công", result);
         return ResponseEntity.ok(response);
@@ -57,7 +70,5 @@ public class OrderController {
         var response = DataResponse.successVoid("Hủy đơn hàng thành công.");
         return ResponseEntity.ok(response);
     }
-
-
 
 }

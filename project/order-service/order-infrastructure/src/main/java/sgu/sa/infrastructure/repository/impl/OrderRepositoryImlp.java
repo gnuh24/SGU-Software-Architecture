@@ -16,6 +16,7 @@ import java.util.UUID;
 public class OrderRepositoryImlp implements OrderRepository {
     private final OrderJpaRepository orderJpaRepository;
     private final OrderEntityMapper orderMapper;
+
     @Override
     public Order save(Order order) {
         var orderEntity = orderMapper.toEntity(order);
@@ -26,12 +27,18 @@ public class OrderRepositoryImlp implements OrderRepository {
     @Override
     public Optional<Order> findById(UUID id) {
         return orderJpaRepository.findById(id)
-            .map(orderMapper::toDomain);
+                .map(orderMapper::toDomain);
     }
 
     @Override
     public List<Order> findByCustomerId(UUID id) {
         var orders = orderJpaRepository.findByCustomerId(id);
+        return orderMapper.toDomainList(orders);
+    }
+
+    @Override
+    public List<Order> findAll() {
+        var orders = orderJpaRepository.findAll();
         return orderMapper.toDomainList(orders);
     }
 }
