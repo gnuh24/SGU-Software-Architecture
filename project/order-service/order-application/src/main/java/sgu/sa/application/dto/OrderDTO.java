@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.UUID;
 
 public record OrderDTO(
-    UUID orderId,
-    UUID customerId,
-    UUID restaurantId,
-    BigDecimal totalPrice,
-    PaymentMethod method,
-    OrderStatus status,
-    Address address,
-    List<OrderItemDTO> items,
-    List<OrderStatusEntryDTO> statusHistory
-) {
+        UUID orderId,
+        UUID customerId,
+        UUID restaurantId,
+        BigDecimal totalPrice,
+        PaymentMethod method,
+        OrderStatus status,
+        Address address,
+        Integer rating,
+        List<OrderItemDTO> items,
+        List<OrderStatusEntryDTO> statusHistory) {
 }

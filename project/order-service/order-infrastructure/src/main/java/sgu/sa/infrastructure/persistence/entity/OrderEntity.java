@@ -48,15 +48,15 @@ public class OrderEntity implements HasDomainEvent {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    @Column(name = "rating")
+    private Integer rating;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "order_id")
     private List<OrderItemEntity> items;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-        name = "order_status_history",
-        joinColumns = @JoinColumn(name = "order_id")
-    )
+    @CollectionTable(name = "order_status_history", joinColumns = @JoinColumn(name = "order_id"))
     @OrderBy("changedAt ASC")
     private List<OrderStatusEntryEmbedded> statusHistory = new ArrayList<>();
 }

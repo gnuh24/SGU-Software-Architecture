@@ -8,6 +8,8 @@ import sgu.sa.application.usecase.command.cancelorder.CancelOrderHandler;
 import sgu.sa.application.usecase.command.createorder.CreateOrderCommand;
 import sgu.sa.application.usecase.command.createorder.CreateOrderHandler;
 import sgu.sa.application.usecase.command.createorder.CreateOrderResult;
+import sgu.sa.application.usecase.command.rateorder.RateOrderCommand;
+import sgu.sa.application.usecase.command.rateorder.RateOrderHandler;
 import sgu.sa.application.usecase.query.getorder.GetOrderHandler;
 import sgu.sa.application.usecase.query.getorder.GetOrderQuery;
 import sgu.sa.application.usecase.query.getorder.GetOrderResult;
@@ -29,6 +31,7 @@ public class OrderController {
     private final GetOrderHandler getOrderHandler;
     private final GetUserOrdersHandler getUserOrdersHandler;
     private final CancelOrderHandler cancelOrderHandler;
+    private final RateOrderHandler rateOrderHandler;
     private final GetOrderStatisticsHandler getOrderStatisticsHandler;
 
     @GetMapping("/{orderId}")
@@ -68,6 +71,16 @@ public class OrderController {
         var command = new CancelOrderCommand(orderId);
         cancelOrderHandler.handle(command);
         var response = DataResponse.successVoid("Hủy đơn hàng thành công.");
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{orderId}/rate")
+    public ResponseEntity<DataResponse<Void>> rateOrder(
+            @PathVariable UUID orderId,
+            @RequestParam Integer rating) {
+        var command = new RateOrderCommand(orderId, rating);
+        rateOrderHandler.handle(command);
+        var response = DataResponse.successVoid("Đánh giá đơn hàng thành công.");
         return ResponseEntity.ok(response);
     }
 

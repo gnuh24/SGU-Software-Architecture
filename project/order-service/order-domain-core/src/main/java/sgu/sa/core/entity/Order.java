@@ -4,8 +4,10 @@ import sgu.sa.core.common.HasDomainEvent;
 import sgu.sa.core.event.OrderCanceledEvent;
 import sgu.sa.core.event.OrderCreatedEvent;
 import sgu.sa.core.event.OrderPaidEvent;
+import sgu.sa.core.event.OrderRatedEvent;
 import sgu.sa.core.vo.ItemData;
 import sgu.sa.core.exception.InvalidStatusException;
+import sgu.sa.core.exception.InvalidRatingException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order implements HasDomainEvent {
@@ -32,17 +35,17 @@ public class Order implements HasDomainEvent {
     private OrderStatus status;
     private Address address;
     private Instant createdAt;
+    private Integer rating;
 
     private List<OrderItem> items = new ArrayList<>();
     private List<OrderStatusEntry> statusHistory = new ArrayList<>();
 
     public static Order create(
-        UUID customerId,
-        UUID restaurantId,
-        PaymentMethod method,
-        Address address,
-        List<ItemData> items
-    )  {
+            UUID customerId,
+            UUID restaurantId,
+            PaymentMethod method,
+            Address address,
+            List<ItemData> items) {
         Order order = new Order();
         order.setOrderId(UUID.randomUUID());
         order.setCustomerId(customerId);
@@ -55,20 +58,19 @@ public class Order implements HasDomainEvent {
         order.addItems(items);
 
         order.addDomainEvent(new OrderCreatedEvent(
-            order.getOrderId(),
-            order.getCustomerId(),
-            order.getTotalPrice(),
-            order.getMethod(),
-            items,
-            Instant.now()
-        ));
+                order.getOrderId(),
+                order.getCustomerId(),
+                order.getTotalPrice(),
+                order.getMethod(),
+                items,
+                Instant.now()));
         return order;
     }
 
     public BigDecimal getTotalPrice() {
         return getItems().stream()
-            .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public void addItems(List<ItemData> items) {
@@ -76,13 +78,12 @@ public class Order implements HasDomainEvent {
             this.items = new ArrayList<>();
         }
         List<OrderItem> orderItems = items.stream()
-            .map(item -> OrderItem.create(
-                this.getOrderId(),
-                item.productId(),
-                item.quantity(),
-                item.price())
-            )
-            .toList();
+                .map(item -> OrderItem.create(
+                        this.getOrderId(),
+                        item.productId(),
+                        item.quantity(),
+                        item.price()))
+                .toList();
         this.items.addAll(orderItems);
     }
 
@@ -101,5 +102,24 @@ public class Order implements HasDomainEvent {
             default -> {
             }
         }
+    }
+
+    public void rateOrder(Integer ratingValue) {
+        if (ratingValue == null || ratingValue < 1 || ratingValue > 5) {
+            throw new InvalidRatingException("Rating phải từ 1 đến 5 sao");
+        }
+
+        if (!OrderStatus.PAID.equals(this.status)) {
+            throw new InvalidStatusException("Chỉ có thể rate đơn hàng khi trạng thái là PAID");
+        }
+
+        if (this.rating != null) {
+            throw new InvalidStatusException("Đơn hàng đã được rate rồi");
+        }
+
+        this.rating = ratingValue;
+        Instant now = Instant.now();
+
+        addDomainEvent(new OrderRatedEvent(getOrderId(), ratingValue, now));
     }
 }
